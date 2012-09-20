@@ -1,0 +1,15 @@
+--- hplip-3.12.2/Makefile.am~	2012-02-09 15:31:02.000000000 +0100
++++ hplip-3.12.2/Makefile.am	2012-02-09 15:32:46.074765870 +0100
+@@ -506,12 +506,10 @@
+ install-dist_hplip_LogDATA:
+ if FULL_BUILD
+ 	test -z "$(DESTDIR)$(hplip_Logdir)" || mkdir -p $(DESTDIR)$(hplip_Logdir)
+-	chgrp "lp" -R $(DESTDIR)$(hplip_Logdir)
+ 	chmod 774 $(DESTDIR)$(hplip_Logdir)
+ endif	#FULL_BUILD
+ if HPLIP_BUILD
+ 	test -z "$(DESTDIR)$(hplip_Logdir)" || mkdir -p $(DESTDIR)$(hplip_Logdir)
+-	chgrp "lp" -R $(DESTDIR)$(hplip_Logdir)
+ 	chmod 774 $(DESTDIR)$(hplip_Logdir)
+ endif	#FULL_BUILD
+ 

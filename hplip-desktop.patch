@@ -1,0 +1,11 @@
+diff -aurN hplip-2.8.4.orig/hplip.desktop.in hplip-2.8.4/hplip.desktop.in
+--- hplip-2.8.4.orig/hplip.desktop.in	2008-04-03 00:18:41.000000000 +0200
++++ hplip-2.8.4/hplip.desktop.in	2008-04-09 21:09:38.000000000 +0200
+@@ -7,6 +6,6 @@
+ Exec=hp-toolbox
+ Icon=@abs_datadir@/hplip/data/images/48x48/prog.png
+ Terminal=false
+-Categories=Application;Utility;
++Categories=Qt;Settings;HardwareSettings;
+ X-KDE-StartupNotify=false
+ StartupNotify=false
