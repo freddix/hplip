@@ -1,11 +1,11 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Name:		hplip
-Version:	3.12.9
-Release:	1
+Version:	3.12.11
+Release:	3
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	843a089fb4f113e6a65312094aeab8aa
+# Source0-md5:	6caadc4a9e49076c284b146e2dce2937
 Patch0:		%{name}-desktop.patch
 Patch1:		%{name}-cups-1.6-buildfix.patch
 URL:		http://hplipopensource.com/hplip-web/index.html
@@ -20,8 +20,8 @@ BuildRequires:	polkit-devel
 BuildRequires:	python-devel
 BuildRequires:	python-modules
 Requires:	%{name}-libs = %{version}-%{release}
-Requires:	python-PyQt4
-Requires:	python-PyQt4-QtDBus
+Requires:	python-PyQt
+Requires:	python-PyQt-QtDBus
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		cups_ppd_dir	%{cups_dir}/model
@@ -50,15 +50,15 @@ Requires:	cups
 %description ppd
 PPD database for Hewlett Packard printers.
 
-%package -n cups-backend-hp
+%package -n cups-backend-hplip
 Summary:	HP backend for CUPS
 Group:		Applications/Printing
 Requires:	%{name} = %{version}-%{release}
 Requires:	cups
 Requires:	foomatic-filters
-Requires:	ghostscript-pstoraster
+Requires:	ghostscript-cups
 
-%description -n cups-backend-hp
+%description -n cups-backend-hplip
 This package allow CUPS printing on HP printers.
 
 %prep
@@ -90,9 +90,10 @@ sed -i 's,chgrp.*,,g' Makefile.am
 rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT		\
-	drvdir=%{cups_dir}/drivers	\
-	rulesdir=/usr/lib/udev/rules.d
+	DESTDIR=$RPM_BUILD_ROOT				\
+	drvdir=%{cups_dir}/drivers			\
+	policykit_dir=%{_datadir}/polkit-1/actions	\
+	rulesdir=%{_prefix}/lib/udev/rules.d
 
 rm -f $RPM_BUILD_ROOT%{cups_ppd_dir}/*.ppd
 rm -f $RPM_BUILD_ROOT%{_datadir}/hplip/hplip-install
@@ -116,15 +117,20 @@ rm -rf $RPM_BUILD_ROOT
 %doc doc/*
 %attr(755,root,root) %{_bindir}/hp-align
 %attr(755,root,root) %{_bindir}/hp-check
+%attr(755,root,root) %{_bindir}/hp-check-plugin
 %attr(755,root,root) %{_bindir}/hp-clean
 %attr(755,root,root) %{_bindir}/hp-colorcal
+%attr(755,root,root) %{_bindir}/hp-config_usb_printer
 %attr(755,root,root) %{_bindir}/hp-devicesettings
+%attr(755,root,root) %{_bindir}/hp-diagnose_plugin
+%attr(755,root,root) %{_bindir}/hp-diagnose_queues
 %attr(755,root,root) %{_bindir}/hp-fab
 %attr(755,root,root) %{_bindir}/hp-faxsetup
 %attr(755,root,root) %{_bindir}/hp-firmware
 %attr(755,root,root) %{_bindir}/hp-info
 %attr(755,root,root) %{_bindir}/hp-levels
 %attr(755,root,root) %{_bindir}/hp-linefeedcal
+%attr(755,root,root) %{_bindir}/hp-logcapture
 %attr(755,root,root) %{_bindir}/hp-makecopies
 %attr(755,root,root) %{_bindir}/hp-makeuri
 %attr(755,root,root) %{_bindir}/hp-mkuri
@@ -166,8 +172,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/hplip/prnt
 %dir %{_datadir}/hplip/ui4
 
-%dir /var/lib/hp
-
 %attr(755,root,root) %{_datadir}/hplip/*.py
 %attr(755,root,root) %{_datadir}/hplip/base/*.py
 %attr(755,root,root) %{_datadir}/hplip/copier/*.py
@@ -187,7 +191,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libhpip.so.*.*.*
 %attr(755,root,root) %{_libdir}/libhpmud.so.*.*.*
 
-%files -n cups-backend-hp
+%files -n cups-backend-hplip
 %defattr(644,root,root,755)
 %{_datadir}/cups/drivers/hpcups.drv
 %attr(755,root,root) %{ulibdir}/cups/backend/hp
@@ -197,5 +201,5 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{ulibdir}/cups/filter/hplipjs
 %attr(755,root,root) %{ulibdir}/cups/filter/pstotiff
 %{cups_ppd_dir}/*.ppd.gz
-/usr/lib/udev/rules.d/70-hplip.rules
+%{_prefix}/lib/udev/rules.d/70-hplip.rules
 
