@@ -1,11 +1,11 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Name:		hplip
-Version:	3.12.11
-Release:	3
+Version:	3.13.8
+Release:	1
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	6caadc4a9e49076c284b146e2dce2937
+# Source0-md5:	44de6a1e4d295ae6f1f0f0ef1cdc7301
 Patch0:		%{name}-desktop.patch
 Patch1:		%{name}-cups-1.6-buildfix.patch
 URL:		http://hplipopensource.com/hplip-web/index.html
@@ -64,10 +64,10 @@ This package allow CUPS printing on HP printers.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
+#%patch1 -p1
 
-sed -i 's,^#!/usr/bin/env python$,#!/usr/bin/python,' *.py
-sed -i 's,chgrp.*,,g' Makefile.am
+%{__sed} -i 's,^#!/usr/bin/env python$,#!/usr/bin/python,' *.py
+%{__sed} -i 's,chgrp.*,,g' Makefile.am
 
 %build
 %{__libtoolize}
@@ -95,16 +95,12 @@ rm -rf $RPM_BUILD_ROOT
 	policykit_dir=%{_datadir}/polkit-1/actions	\
 	rulesdir=%{_prefix}/lib/udev/rules.d
 
-rm -f $RPM_BUILD_ROOT%{cups_ppd_dir}/*.ppd
-rm -f $RPM_BUILD_ROOT%{_datadir}/hplip/hplip-install
-rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
-rm -f $RPM_BUILD_ROOT%{_libdir}/sane/*.la
-rm -f $RPM_BUILD_ROOT%{py_sitedir}/*.la
-rm -rf $RPM_BUILD_ROOT/etc/sane.d
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/*.{la,so}
+%{__rm} $RPM_BUILD_ROOT%{py_sitedir}/*.la
+%{__rm} $RPM_BUILD_ROOT%{_bindir}/hp-{doctor,uninstall,upgrade}
 
-ln -sf %{_bindir}/foomatic-rip $RPM_BUILD_ROOT%{ulibdir}/cups/filter/foomatic-rip-hplip
-
-mv -f $RPM_BUILD_ROOT/usr/lib/udev/rules.d/{40-hplip.rules,70-hplip.rules}
+ln -sf %{_bindir}/foomatic-rip \
+	$RPM_BUILD_ROOT%{ulibdir}/cups/filter/foomatic-rip-hplip
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -117,7 +113,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc doc/*
 %attr(755,root,root) %{_bindir}/hp-align
 %attr(755,root,root) %{_bindir}/hp-check
-%attr(755,root,root) %{_bindir}/hp-check-plugin
 %attr(755,root,root) %{_bindir}/hp-clean
 %attr(755,root,root) %{_bindir}/hp-colorcal
 %attr(755,root,root) %{_bindir}/hp-config_usb_printer
@@ -163,6 +158,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/dbus-1/system-services/com.hp.hplip.service
 %{_datadir}/polkit-1/actions/com.hp.hplip.policy
 %{_sysconfdir}/dbus-1/system.d/com.hp.hplip.conf
+%{systemdunitdir}/hplip-printer@.service
 
 %dir %{_datadir}/hplip
 %dir %{_datadir}/hplip/base
@@ -199,7 +195,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{ulibdir}/cups/filter/hpcac
 %attr(755,root,root) %{ulibdir}/cups/filter/hpcups
 %attr(755,root,root) %{ulibdir}/cups/filter/hplipjs
+%attr(755,root,root) %{ulibdir}/cups/filter/hpps
 %attr(755,root,root) %{ulibdir}/cups/filter/pstotiff
 %{cups_ppd_dir}/*.ppd.gz
-%{_prefix}/lib/udev/rules.d/70-hplip.rules
+%{_prefix}/lib/udev/rules.d/56-hpmud.rules
 
