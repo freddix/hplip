@@ -1,13 +1,12 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Name:		hplip
 Version:	3.13.8
-Release:	1
+Release:	2
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
 # Source0-md5:	44de6a1e4d295ae6f1f0f0ef1cdc7301
 Patch0:		%{name}-desktop.patch
-Patch1:		%{name}-cups-1.6-buildfix.patch
 URL:		http://hplipopensource.com/hplip-web/index.html
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -55,8 +54,8 @@ Summary:	HP backend for CUPS
 Group:		Applications/Printing
 Requires:	%{name} = %{version}-%{release}
 Requires:	cups
+Requires:	cups-filters
 Requires:	foomatic-filters
-Requires:	ghostscript-cups
 
 %description -n cups-backend-hplip
 This package allow CUPS printing on HP printers.
@@ -64,7 +63,6 @@ This package allow CUPS printing on HP printers.
 %prep
 %setup -q
 %patch0 -p1
-#%patch1 -p1
 
 %{__sed} -i 's,^#!/usr/bin/env python$,#!/usr/bin/python,' *.py
 %{__sed} -i 's,chgrp.*,,g' Makefile.am
