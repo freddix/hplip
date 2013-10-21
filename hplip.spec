@@ -1,11 +1,11 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Name:		hplip
-Version:	3.13.8
-Release:	2
+Version:	3.13.10
+Release:	1
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	44de6a1e4d295ae6f1f0f0ef1cdc7301
+# Source0-md5:	ba729c514a2dc95390b99e9a9d452999
 Patch0:		%{name}-desktop.patch
 URL:		http://hplipopensource.com/hplip-web/index.html
 BuildRequires:	autoconf
@@ -126,7 +126,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/hp-logcapture
 %attr(755,root,root) %{_bindir}/hp-makecopies
 %attr(755,root,root) %{_bindir}/hp-makeuri
-%attr(755,root,root) %{_bindir}/hp-mkuri
 %attr(755,root,root) %{_bindir}/hp-pkservice
 %attr(755,root,root) %{_bindir}/hp-plugin
 %attr(755,root,root) %{_bindir}/hp-pqdiag
@@ -147,8 +146,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_sitedir}/cupsext.so
 %attr(755,root,root) %{py_sitedir}/hpmudext.so
 %attr(755,root,root) %{py_sitedir}/pcardext.so
-
-%attr(755,root,root) %{ulibdir}/cups/filter/hplipjs
 
 %dir %{_sysconfdir}/hp
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/hp/*
@@ -190,9 +187,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/cups/drivers/hpcups.drv
 %attr(755,root,root) %{ulibdir}/cups/backend/hp
 %attr(755,root,root) %{ulibdir}/cups/filter/foomatic-rip-hplip
-%attr(755,root,root) %{ulibdir}/cups/filter/hpcac
 %attr(755,root,root) %{ulibdir}/cups/filter/hpcups
-%attr(755,root,root) %{ulibdir}/cups/filter/hplipjs
 %attr(755,root,root) %{ulibdir}/cups/filter/hpps
 %attr(755,root,root) %{ulibdir}/cups/filter/pstotiff
 %{cups_ppd_dir}/*.ppd.gz
