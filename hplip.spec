@@ -1,11 +1,11 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Name:		hplip
-Version:	3.13.10
+Version:	3.14.1
 Release:	1
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	ba729c514a2dc95390b99e9a9d452999
+# Source0-md5:	11eb45f3d3edf1f03887fd13afc61b51
 Patch0:		%{name}-desktop.patch
 URL:		http://hplipopensource.com/hplip-web/index.html
 BuildRequires:	autoconf
@@ -53,9 +53,7 @@ PPD database for Hewlett Packard printers.
 Summary:	HP backend for CUPS
 Group:		Applications/Printing
 Requires:	%{name} = %{version}-%{release}
-Requires:	cups
 Requires:	cups-filters
-Requires:	foomatic-filters
 
 %description -n cups-backend-hplip
 This package allow CUPS printing on HP printers.
@@ -74,6 +72,7 @@ This package allow CUPS printing on HP printers.
 %{__autoconf}
 %configure \
 	--disable-fax-build			\
+	--disable-foomatic-rip-hplip-install	\
 	--disable-network-build			\
 	--disable-qt3				\
 	--disable-scan-build			\
@@ -97,7 +96,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__rm} $RPM_BUILD_ROOT%{py_sitedir}/*.la
 %{__rm} $RPM_BUILD_ROOT%{_bindir}/hp-{doctor,uninstall,upgrade}
 
-ln -sf %{_bindir}/foomatic-rip \
+ln -sf %{_prefix}/lib/cups/filter/foomatic-rip \
 	$RPM_BUILD_ROOT%{ulibdir}/cups/filter/foomatic-rip-hplip
 
 %clean
@@ -164,6 +163,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/hplip/ui4
 
 %attr(755,root,root) %{_datadir}/hplip/*.py
+%attr(755,root,root) %{_datadir}/hplip/*.sh
 %attr(755,root,root) %{_datadir}/hplip/base/*.py
 %attr(755,root,root) %{_datadir}/hplip/copier/*.py
 %attr(755,root,root) %{_datadir}/hplip/installer/*.py
